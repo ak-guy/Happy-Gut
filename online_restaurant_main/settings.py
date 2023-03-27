@@ -78,7 +78,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME'), # name of the database
-        'USER': 'postgres', # user_name of the database by default it is postgres in pgadmin4
+        'USER': 'happy_gut', # user_name of the database by default it is postgres in pgadmin4
         'PASSWORD': config('DB_PASSWORD'), # password of database
         'HOST': 'localhost',
     }
