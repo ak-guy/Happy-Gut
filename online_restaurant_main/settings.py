@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -78,12 +79,13 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': config('DB_NAME'), # name of the database
-        'USER': 'happy_gut', # user_name of the database by default it is postgres in pgadmin4
+        'USER': 'postgres', # user_name of the database by default it is postgres in pgadmin4
         'PASSWORD': config('DB_PASSWORD'), # password of database
         'HOST': 'localhost',
     }
 }
 
+AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
