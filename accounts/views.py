@@ -3,6 +3,9 @@ from django.shortcuts import render, redirect
 from .forms import UserForm
 from .models import User
 
+from django.contrib import messages
+
+
 def registerUser(request):
     if request.method == 'POST':
         ''' response for request.POST ->
@@ -17,6 +20,7 @@ def registerUser(request):
             user.set_password(password)
             user.role = User.CUSTOMER
             user.save()
+            messages.success(request, "Your Account has been created Successfully!!")
             return redirect('registerUser')
             '''
             another method to do the same thing will be ->
@@ -35,7 +39,8 @@ def registerUser(request):
             ''' example ->
             <ul class="errorlist"><li>email<ul class="errorlist"><li>User with this Email already exists.</li></ul></li></ul>
             '''
-            print(form.errors)
+            # print(form.errors)
+            pass
     else:
         form = UserForm()
     context = {
