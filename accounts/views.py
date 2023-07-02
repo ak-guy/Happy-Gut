@@ -40,6 +40,7 @@ def registerUser(request):
             <ul class="errorlist"><li>email<ul class="errorlist"><li>User with this Email already exists.</li></ul></li></ul>
             '''
             # print(form.errors)
+            messages.error(request, "Please Enter valid information")
             pass
     else:
         form = UserForm()
