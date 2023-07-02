@@ -5,7 +5,11 @@ from .models import User
 
 def registerUser(request):
     if request.method == 'POST':
-        print(request.POST)
+        ''' response for request.POST ->
+        <QueryDict: {'csrfmiddlewaretoken': ['Df3xJaNlRYycqRsDJIFLwrDGd8RyqGIRCpdP7uPPOCPrbxr7IVNMjRCiP4nAFEoD'],
+        'first_name': ['arp'], 'last_name': ['ku'], 'email': ['arp@gamil.com'], 'username': ['aks'],
+        'password': ['123'], 'confirm_password': ['123']}>
+        '''
         form = UserForm(request.POST)
         if form.is_valid():
             password = form.cleaned_data.get('password')
@@ -27,6 +31,11 @@ def registerUser(request):
             user.save()
             return redirect('registerUser')
             '''
+        else:
+            ''' example ->
+            <ul class="errorlist"><li>email<ul class="errorlist"><li>User with this Email already exists.</li></ul></li></ul>
+            '''
+            print(form.errors)
     else:
         form = UserForm()
     context = {
