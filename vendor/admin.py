@@ -2,4 +2,8 @@ from django.contrib import admin
 from vendor.models import Vendor
 
 # Register your models here.
-admin.site.register(Vendor)
+class CustomVendorAdmin(admin.ModelAdmin):
+    list_display = ('user', 'restaurant_name', 'is_approved', 'created_at')
+    list_display_links = ('user', 'restaurant_name')
+
+admin.site.register(Vendor, CustomVendorAdmin)
