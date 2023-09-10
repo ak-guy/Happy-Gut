@@ -8,7 +8,11 @@ from django.contrib import messages, auth
 
 
 def registerUser(request):
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        print("already logged in")
+        messages.warning(request, "You are already logged in")
+        return redirect('dashboard')
+    elif request.method == 'POST':
         ''' response for request.POST ->
         <QueryDict: {'csrfmiddlewaretoken': ['Df3xJaNlRYycqRsDJIFLwrDGd8RyqGIRCpdP7uPPOCPrbxr7IVNMjRCiP4nAFEoD'],
         'first_name': ['arp'], 'last_name': ['ku'], 'email': ['arp@gamil.com'], 'username': ['aks'],
@@ -55,7 +59,11 @@ def registerVendor(request):
     while registering vendor we will create an user and allocate it Restaurant role
     also we need to make entry in three tables while registering a vendor; User, UserProfile, Vendor
     '''
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        print("already logged in")
+        messages.warning(request, "You are already logged in")
+        return redirect('dashboard')
+    elif request.method == 'POST':
         form = UserForm(request.POST)
         vendor_form = VendorForm(request.POST, request.FILES)
         if form.is_valid() and vendor_form.is_valid():
@@ -86,15 +94,19 @@ def registerVendor(request):
     return render(request, 'accounts/registerVendor.html', context)
 
 def login(request):
-    if request.method == 'POST':
-        email = request.POST['email']
-        password = request.POST['password']
-
+    if request.user.is_authenticated:
+        print("already logged in")
+        messages.warning(request, "You are already logged in")
+        return redirect('dashboard')
+    elif request.method == 'POST':
+        email = request.POST.get('email', None)
+        password = request.POST.get('password',None)
+        print(email, password)
         user = auth.authenticate(email=email, password=password)
-        if user:
-            print("user is present")
+        if user is not None:
+            print("logging in..")
             auth.login(request, user)
-            messages.success(request, "You are now logged in")
+            # messages.success(request, "You are now logged in")
             return redirect('dashboard')
         else:
             messages.error(request, "Please enter correct email and password")
