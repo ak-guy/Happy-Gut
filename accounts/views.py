@@ -4,7 +4,7 @@ from .forms import UserForm
 from vendor.forms import VendorForm
 from .models import User, UserProfile
 
-from django.contrib import messages
+from django.contrib import messages, auth
 
 
 def registerUser(request):
@@ -84,3 +84,24 @@ def registerVendor(request):
         'vendor_form': vendor_form,
     }
     return render(request, 'accounts/registerVendor.html', context)
+
+def login(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        user = auth.authenticate(email=email, password=password)
+        if user:
+            auth.login(request, user)
+            messages.success(request, "You are now logged in")
+            return redirect('dashboard')
+        else:
+            messages.error(request, "Please enter correct email and password")
+            return redirect('login')
+    return render(request, 'accounts/login.html')
+
+def logout(request):
+    pass
+
+def dashboard(request):
+    return render(request, 'accounts/dashboard.html')
