@@ -92,6 +92,7 @@ def login(request):
 
         user = auth.authenticate(email=email, password=password)
         if user:
+            print("user is present")
             auth.login(request, user)
             messages.success(request, "You are now logged in")
             return redirect('dashboard')
@@ -101,7 +102,9 @@ def login(request):
     return render(request, 'accounts/login.html')
 
 def logout(request):
-    pass
+    auth.logout(request)
+    messages.info(request, "You are now logged out")
+    return redirect('login')
 
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')
