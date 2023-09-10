@@ -118,5 +118,8 @@ def logout(request):
     messages.info(request, "You are now logged out")
     return redirect('login')
 
+def myAccounts(request):
+    pass
+
 def dashboard(request):
     return render(request, 'accounts/dashboard.html')

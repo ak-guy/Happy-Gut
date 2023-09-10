@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
 
 {% block content %}
-Welcome, {{user.first_name}} {{user.last_name}}
+Welcome, {{user.first_name}} {{user.last_name}} {{user.get_role}}
 {% endblock %}
