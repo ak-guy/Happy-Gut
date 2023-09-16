@@ -3,9 +3,9 @@ from django.shortcuts import render, redirect
 from .forms import UserForm
 from vendor.forms import VendorForm
 from .models import User, UserProfile
-
+from accounts.utils import detectUser
 from django.contrib import messages, auth
-
+from django.contrib.auth.decorators import login_required
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -97,17 +97,16 @@ def login(request):
     if request.user.is_authenticated:
         print("already logged in")
         messages.warning(request, "You are already logged in")
-        return redirect('dashboard')
+        return redirect('myAccount')
     elif request.method == 'POST':
         email = request.POST.get('email', None)
         password = request.POST.get('password',None)
-        print(email, password)
         user = auth.authenticate(email=email, password=password)
         if user is not None:
             print("logging in..")
             auth.login(request, user)
             # messages.success(request, "You are now logged in")
-            return redirect('dashboard')
+            return redirect('myAccount')
         else:
             messages.error(request, "Please enter correct email and password")
             return redirect('login')
@@ -118,8 +117,16 @@ def logout(request):
     messages.info(request, "You are now logged out")
     return redirect('login')
 
-def myAccounts(request):
-    pass
+@login_required(login_url='login')
+def myAccount(request):
+    user = request.user
+    redirecturl = detectUser(user)
+    return redirect(redirecturl)
 
-def dashboard(request):
-    return render(request, 'accounts/dashboard.html')
+@login_required(login_url='login')
+def custdashboard(request):
+    return render(request, 'accounts/custdashboard.html')
+
+@login_required(login_url='login')
+def venddashboard(request):
+    return render(request, 'accounts/venddashboard.html')

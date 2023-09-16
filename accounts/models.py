@@ -6,7 +6,16 @@ superuser cred:
     id -> arpit@gmail.com
     pass -> 123
 '''
+'''
+id -> arpitkr@gmail.com
+pass -> special
 
+id -> apnadhaba@gmail.com
+pass -> restaurant123
+
+id -> randomcustomer1@gmail.com
+pass -> cust1234
+'''
 # Create your models here.
 class UserManager(BaseUserManager):
     # will contain only methods
