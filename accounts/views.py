@@ -5,7 +5,22 @@ from vendor.forms import VendorForm
 from .models import User, UserProfile
 from accounts.utils import detectUser
 from django.contrib import messages, auth
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.core.exceptions import PermissionDenied
+
+def check_role_vendor(user):
+    '''
+    '''
+    if user.role == 1:
+        return True
+    raise PermissionDenied
+
+def check_role_customer(user):
+    '''
+    '''
+    if user.role == 2:
+        return True
+    raise PermissionDenied
 
 def registerUser(request):
     if request.user.is_authenticated:
@@ -124,9 +139,11 @@ def myAccount(request):
     return redirect(redirecturl)
 
 @login_required(login_url='login')
+@user_passes_test(check_role_customer)
 def custdashboard(request):
     return render(request, 'accounts/custdashboard.html')
 
 @login_required(login_url='login')
+@user_passes_test(check_role_vendor)
 def venddashboard(request):
     return render(request, 'accounts/venddashboard.html')
