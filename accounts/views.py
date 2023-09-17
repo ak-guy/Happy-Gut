@@ -45,7 +45,9 @@ def registerUser(request):
             messages.success(request, "Your Account has been created Successfully!!")
 
             # just after user is created, we will send verification mail
-            send_verification_mail(request, user)
+            mail_subject = 'Please activate you account'
+            mail_template = 'accounts/emails/account_verification_email.html'
+            send_verification_mail(request, user, mail_subject, mail_template)
             return redirect('registerUser')
             '''
             another method to do the same thing will be ->
@@ -103,7 +105,9 @@ def registerVendor(request):
             messages.success(request, "Your Account has been created Successfully!!")
 
             # just after user is created, we will send verification mail
-            send_verification_mail(request, user)
+            mail_subject = 'Please activate you account'
+            mail_template = 'accounts/emails/account_verification_email.html'
+            send_verification_mail(request, user, mail_subject, mail_template)
             return redirect('registerVendor')
         else:
             print(form.errors)
@@ -149,7 +153,7 @@ def login(request):
         if user is not None:
             print("logging in..")
             auth.login(request, user)
-            # messages.success(request, "You are now logged in")
+            messages.success(request, "You are now logged in")
             return redirect('myAccount')
         else:
             messages.error(request, "Please enter correct email and password")
@@ -176,3 +180,57 @@ def custdashboard(request):
 @user_passes_test(check_role_vendor)
 def venddashboard(request):
     return render(request, 'accounts/venddashboard.html')
+
+def forgot_password(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+
+        if User.objects.filter(email=email).exists():
+            user = User.objects.get(email__exact=email)
+
+            '''send reset password email
+            '''
+            mail_subject = 'Please click on this link to reset your password'
+            mail_template = 'accounts/emails/reset_password_email.html'
+            send_verification_mail(request, user, mail_subject, mail_template)
+            messages.success(request, "Password resest link has been sent to your email")
+            return redirect('login')
+        else:
+            messages.error(request, "Account does not exist")
+            return redirect('forgot_password')
+
+    return render(request, 'accounts/forgot_password.html')
+
+def reset_password_validate(request, uidb64, token):
+    '''
+    validate the token received
+    '''
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User._default_manager.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    if user and default_token_generator.check_token(user, token):
+        request.session['uid'] = uid # we will use this while updating the password to a particular user
+        return redirect('reset_password')
+    else:
+        messages.error(request, "Invalid activation Link")
+        return redirect('myAccount')
+
+def reset_password(request):
+    if request.method == 'POST':
+        password = request.POST['password']
+        confirm_password = request.POST['confirm_password']
+        if password == confirm_password:
+            pk = request.session.get('uid')
+            user = User.objects.get(pk=pk)
+            user.set_password(password)
+            user.is_active = True
+            user.save()
+            messages.success(request, "Your password has been successfuly updated")
+            return redirect('login')
+        else:
+            messages.error(request, "Passwords does not match")
+            return redirect('reset_password')
+    return render(request, 'accounts/reset_password.html')
