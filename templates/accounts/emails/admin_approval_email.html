@@ -1,0 +1,10 @@
+{% autoescape off %}
+
+Hi {{user.first_name}} {{user.second_name}},
+{% if is_approved %}
+Congrats! Your restaurant has been approved --- Happy Gut
+{% else %}
+We are sorry to inform, your restaurant has not been approved. For more details, please contact support@happygut.com
+{% endif %}
+
+{% endautoescape %}

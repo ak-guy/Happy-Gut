@@ -24,6 +24,7 @@ def detectUser(user):
 def send_verification_mail(request, user, mail_subject, mail_template):
     from_email = settings.DEFAULT_FROM_EMAIL
     current_site = get_current_site(request)
+    # message = render_to_string(mail_template, context)
     message = render_to_string(mail_template, {
         'user': user,
         'domain': current_site,
@@ -31,6 +32,15 @@ def send_verification_mail(request, user, mail_subject, mail_template):
         'token': default_token_generator.make_token(user),
     })
     to_email = user.email
+    mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
+    mail.send()
+    print("mail sent successfully to {}".format(to_email))
+
+def send_notification(mail_subject, mail_template, context):
+    from_email = settings.DEFAULT_FROM_EMAIL
+    message = render_to_string(mail_template, context)
+    # to_email = context.get('user').email
+    to_email = 'arpit.kumar.e21@nsut.ac.in' # for testing
     mail = EmailMessage(mail_subject, message, from_email, to=[to_email])
     mail.send()
     print("mail sent successfully to {}".format(to_email))
