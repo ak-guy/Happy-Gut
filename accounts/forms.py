@@ -22,6 +22,17 @@ class UserProfileForm(forms.ModelForm):
     profile_picture = forms.FileField(validators=[allow_only_images_validator])
     cover_photo = forms.FileField(validators=[allow_only_images_validator])
 
+    # making latitude and longitude readonly
+    # latitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+    # longitude = forms.CharField(widget=forms.TextInput(attrs={'readonly': 'readonly'}))
+
     class Meta:
         model = UserProfile
         fields = ['profile_picture', 'cover_photo', 'address_line_1', 'address_line_2', 'city', 'state', 'country', 'pin_code', 'latitude', 'longitude']
+
+    # another method of making latitude and longitude readonly
+    def __init__(self, *args, **kwargs):
+        super(UserProfileForm, self).__init__(*args, **kwargs)
+        for field in self.fields:
+            if field == 'latitude' or field == 'longitude':
+                self.fields[field].widget.attrs['readonly'] = 'readonly'
