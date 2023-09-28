@@ -1,7 +1,9 @@
-{% extends 'base.html' %}
+{%extends 'base.html'%}
 
-{% load static %}
+{% load static}
+
 {% block content %}
+{% include 'includes/alert_msg.html'%}
 <div class="main-section">
     {% include 'includes/cover.html' %}
     <div class="page-section account-header buyer-logged-in">
@@ -93,6 +95,4 @@
     </div>
 </div>
 <!-- Main Section End -->
-
-{% include 'includes/alert_msg.html' %}
 {% endblock %}
