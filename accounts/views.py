@@ -95,7 +95,10 @@ def registerVendor(request):
             username = form.cleaned_data.get('username')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
-            user = User.objects.create(first_name=first_name, last_name=last_name, username=username, email=email, password=password)
+            print(email)
+            print(password)
+            user = User.objects.create(first_name=first_name, last_name=last_name, username=username, email=email)
+            user.set_password(password)
             user.role = User.RESTAURANT
             user.save()
             vendor = vendor_form.save(commit=False)
@@ -151,12 +154,16 @@ def login(request):
         email = request.POST.get('email', None)
         password = request.POST.get('password',None)
         user = auth.authenticate(email=email, password=password)
+        print("user")
+        print(user)
         if user is not None:
             print("logging in..")
             auth.login(request, user)
             messages.success(request, "You are now logged in")
             return redirect('myAccount')
         else:
+            print(email)
+            print(password)
             messages.error(request, "Please enter correct email and password")
             return redirect('login')
     return render(request, 'accounts/login.html')

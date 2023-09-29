@@ -28,7 +28,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['profile_picture', 'cover_photo', 'address_line_1', 'address_line_2', 'city', 'state', 'country', 'pin_code', 'latitude', 'longitude']
+        fields = ['profile_picture', 'cover_photo', 'address', 'city', 'state', 'country', 'pin_code', 'latitude', 'longitude']
 
     # another method of making latitude and longitude readonly
     def __init__(self, *args, **kwargs):
