@@ -10,6 +10,8 @@ from accounts.views import check_role_vendor
 
 from menu.models import * 
 
+from vendor.utils import get_vendor
+
 # Create your views here.
 
 
@@ -43,11 +45,24 @@ def vprofile(request):
     }
     return render(request, "vendors/vprofile.html", context=context)
 
-
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
 def menu_builder(request):
-    vendor = Vendor.objects.get(user=request.user)
+    vendor = get_vendor(request)
     categories = Category.objects.filter(vendor=vendor)
     context = {
         'categories': categories,
     }
     return render(request, 'vendors/menu-builder.html', context=context)
+
+@login_required(login_url='login')
+@user_passes_test(check_role_vendor)
+def fooditems_by_category(request, pk=None):
+    vendor = get_vendor(request)
+    category = get_object_or_404(Category, pk=pk)
+    food_items = FoodItem.objects.filter(vendor=vendor, category=category)
+    context = {
+        'food_items': food_items,
+        'category': category
+    }
+    return render(request, 'vendors/fooditems_by_category.html', context=context)
