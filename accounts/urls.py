@@ -22,4 +22,5 @@ urlpatterns = [
 
     # for vendor
     path('vendor/', include('vendor.urls')),
+    path('test_api/', views.test_api, name='test_api'),
 ]

@@ -10,6 +10,8 @@ from django.core.exceptions import PermissionDenied
 from django.utils.http import urlsafe_base64_decode
 from django.contrib.auth.tokens import default_token_generator
 from vendor.models import Vendor
+from django.http import HttpResponse, JsonResponse
+import json
 
 def check_role_vendor(user):
     '''
@@ -242,3 +244,8 @@ def reset_password(request):
             messages.error(request, "Passwords does not match")
             return redirect('reset_password')
     return render(request, 'accounts/reset_password.html')
+
+def test_api(request):
+    response_data = {'a': 12, 'codes': 1, 'state': True}
+    response_data = json.dumps(response_data)
+    return HttpResponse(response_data)
